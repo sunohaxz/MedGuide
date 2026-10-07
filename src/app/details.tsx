@@ -1,12 +1,13 @@
 import { Image } from "expo-image";
-import { ScrollView, Text, View } from "react-native";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 
 import { ExternalLink } from "@/components/external-link";
 import { Collapsible } from "@/components/ui/collapsible";
+import { Colors } from "@/constants/theme";
 
 export default function TabTwoScreen() {
   return (
-    <ScrollView>
+    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       <View>
         <Text>Explore</Text>
         <Text>
