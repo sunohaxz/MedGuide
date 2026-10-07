@@ -79,21 +79,106 @@ export default function TabTwoScreen() {
   );
 }
 
-@extends('layouts.app')
-
-@section('title', 'Skills')
-@section('back', 'yes')
-
-@section('content')
-    <h1>Skills 💪</h1>
-
-    @if (count($profile['skills']) === 0)
-        <div class="card">No skills yet. <a href="/edit">Add some on the Edit page.</a></div>
-    @else
-        <div class="card">
-            @foreach ($profile['skills'] as $skill)
-                <span class="tag">{{ $skill }}</span>
-            @endforeach
-        </div>
-    @endif
-@endsection
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: Colors.light.background,
+  },
+  content: {
+    padding: 20,
+    gap: 16,
+  },
+  header: {
+    alignItems: "center",
+    gap: 6,
+  },
+  badge: {
+    width: 62,
+    height: 62,
+    borderRadius: 18,
+    backgroundColor: Colors.light.backgroundElement,
+    borderWidth: 1,
+    borderColor: Colors.light.border,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  badgeText: {
+    fontSize: 28,
+    fontWeight: "700",
+    color: Colors.light.accent,
+  },
+  tag: {
+    color: Colors.light.accent,
+    fontSize: 12,
+    fontWeight: "700",
+    letterSpacing: 0.5,
+    textTransform: "uppercase",
+  },
+  name: {
+    fontSize: 28,
+    fontWeight: "700",
+    color: Colors.light.text,
+  },
+  card: {
+    backgroundColor: Colors.light.backgroundElement,
+    borderWidth: 1,
+    borderColor: Colors.light.border,
+    borderRadius: 16,
+    padding: 16,
+    gap: 8,
+  },
+  sectionTitle: {
+    fontSize: 16,
+    fontWeight: "700",
+    color: Colors.light.text,
+  },
+  commonUsesList: {
+    gap: 6,
+  },
+  commonUseRow: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    gap: 8,
+  },
+  commonUseBullet: {
+    width: 7,
+    height: 7,
+    borderRadius: 4,
+    backgroundColor: Colors.light.accent,
+    marginTop: 7,
+  },
+  body: {
+    fontSize: 15,
+    color: Colors.light.textSecondary,
+    lineHeight: 22,
+  },
+  warningCard: {
+    backgroundColor: "#FFF7ED",
+    borderWidth: 1,
+    borderColor: "#FDBA74",
+    borderRadius: 16,
+    padding: 16,
+    gap: 8,
+  },
+  warningTitle: {
+    fontSize: 16,
+    fontWeight: "700",
+    color: "#9A4F00",
+  },
+  warningText: {
+    fontSize: 15,
+    color: "#7C2D12",
+    lineHeight: 22,
+  },
+  notFoundBox: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 24,
+  },
+  notFoundText: {
+    fontSize: 18,
+    color: Colors.light.text,
+    fontWeight: "600",
+  },
+});
