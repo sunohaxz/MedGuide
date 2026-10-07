@@ -9,6 +9,7 @@ import {
   View,
 } from "react-native";
 
+import { Colors } from "@/constants/theme";
 import { fetch, type Medicine } from "../data/mock-api";
 
 const categoryOptions = [
@@ -61,180 +62,124 @@ export default function MedicinesScreen() {
   }, [medicines, search, selectedCategory]);
 
   return (
-    <ScrollView>
-      <Text>Medicines</Text>
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={styles.content}
+      keyboardShouldPersistTaps="handled"
+    >
+      <View style={styles.header}>
+        <Text style={styles.title}>Medicines</Text>
+        <Text style={styles.subtitle}>
+          Search common medicines by name or purpose.
+        </Text>
+      </View>
 
-      <TextInput
-        value={search}
-        onChangeText={setSearch}
-        placeholder="Search medicines"
-        style={styles.box}
-      />
+      <View style={styles.searchBox}>
+        <Text style={styles.searchIcon}>⌕</Text>
+        <TextInput
+          value={search}
+          onChangeText={setSearch}
+          placeholder="Search medicines"
+          placeholderTextColor={Colors.light.textSecondary}
+          style={styles.input}
+        />
+        {search.length > 0 ? (
+          <TouchableOpacity
+            accessibilityRole="button"
+            accessibilityLabel="Clear search"
+            onPress={() => setSearch("")}
+            style={styles.clearButton}
+          >
+            <Text style={styles.clearText}>×</Text>
+          </TouchableOpacity>
+        ) : null}
+      </View>
 
-      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        <View style={styles.categoryRow}>
-          {categoryOptions.map((category) => {
-            return (
-              <TouchableOpacity
-                key={category}
-                onPress={() => setSelectedCategory(category)}
-                style={styles.box}
+      <View style={styles.categoryRow}>
+        {categoryOptions.map((category) => {
+          const isSelected = selectedCategory === category;
+
+          return (
+            <TouchableOpacity
+              key={category}
+              accessibilityRole="button"
+              accessibilityState={{ selected: isSelected }}
+              onPress={() => setSelectedCategory(category)}
+              style={[
+                styles.categoryButton,
+                isSelected && styles.categoryButtonSelected,
+              ]}
+            >
+              <Text
+                style={[
+                  styles.categoryButtonText,
+                  isSelected && styles.categoryButtonTextSelected,
+                ]}
               >
-                <Text>{category}</Text>
-              </TouchableOpacity>
-            );
-          })}
-        </View>
-      </ScrollView>
+                {category}
+              </Text>
+            </TouchableOpacity>
+          );
+        })}
+      </View>
 
-      {error ? <Text>{error}</Text> : null}
+      <View style={styles.sectionHeader}>
+        <Text style={styles.heading}>Browse medicines</Text>
+        <View style={styles.countPill}>
+          <Text style={styles.countText}>{filteredMedicines.length}</Text>
+        </View>
+      </View>
+
+      {error ? <Text style={styles.error}>{error}</Text> : null}
 
       {filteredMedicines.length === 0 ? (
-        <Text>No medicines match your search.</Text>
-      ) : (
-        filteredMedicines.map((medicine) => (
-          <TouchableOpacity
-            key={medicine.id}
-            onPress={() =>
-              router.push({
-                pathname: "/details",
-                params: { id: String(medicine.id) },
-              })
-            }
-            style={styles.box}
-          >
-            <Text>{medicine.name}</Text>
-            <Text>{medicine.category}</Text>
-            <Text numberOfLines={2}>{medicine.purpose}</Text>
-          </TouchableOpacity>
-        ))
-      )}
-    </ScrollView>
-  );
-}
-
-const styles = StyleSheet.create({
-  box: {
-    borderColor: "#777",
-    borderWidth: 1,
-    padding: 12,
-    marginVertical: 6,
-  },
-  categoryRow: {
-    flexDirection: "row",
-  },
-});
-import { router } from "expo-router";
-import { useEffect, useMemo, useState } from "react";
-import {
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
-
-import { fetch, type Medicine } from "../data/mock-api";
-
-const categoryOptions = [
-  "All",
-  "Pain Relief",
-  "Allergy",
-  "Digestive",
-  "Antibiotic",
-  "Respiratory",
-  "Hydration",
-];
-
-export default function MedicinesScreen() {
-  const [medicines, setMedicines] = useState<Medicine[]>([]);
-  const [search, setSearch] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("All");
-  const [error, setError] = useState("");
-
-  useEffect(() => {
-    async function loadMedicines() {
-      try {
-        const response = await fetch("/api/medicines");
-        if (!response.ok) {
-          throw new Error("Unable to load medicines");
-        }
-
-        const data = (await response.json()) as { medicines: Medicine[] };
-        setMedicines(data.medicines);
-      } catch {
-        setError("Unable to load medicines. Please try again.");
-      }
-    }
-
-    loadMedicines();
-  }, []);
-
-  const filteredMedicines = useMemo(() => {
-    const searchTerm = search.trim().toLowerCase();
-
-    return medicines.filter((medicine) => {
-      const matchesCategory =
-        selectedCategory === "All" || medicine.category === selectedCategory;
-      const matchesSearch =
-        searchTerm.length === 0 ||
-        medicine.name.toLowerCase().includes(searchTerm) ||
-        medicine.purpose.toLowerCase().includes(searchTerm);
-
-      return matchesCategory && matchesSearch;
-    });
-  }, [medicines, search, selectedCategory]);
-
-  return (
-    <ScrollView>
-      <Text>Medicines</Text>
-
-      <TextInput
-        value={search}
-        onChangeText={setSearch}
-        placeholder="Search medicines"
-        style={styles.box}
-      />
-
-      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        <View style={styles.categoryRow}>
-          {categoryOptions.map((category) => {
-            return (
-              <TouchableOpacity
-                key={category}
-                onPress={() => setSelectedCategory(category)}
-                style={styles.box}
-              >
-                <Text>{category}</Text>
-              </TouchableOpacity>
-            );
-          })}
+        <View style={styles.emptyBox}>
+          <Text style={styles.empty}>
+            {error
+              ? "Medicine information could not be loaded."
+              : "No medicines match your search."}
+          </Text>
         </View>
-      </ScrollView>
-
-      {error ? <Text>{error}</Text> : null}
-
-      {filteredMedicines.length === 0 ? (
-        <Text>No medicines match your search.</Text>
       ) : (
-        filteredMedicines.map((medicine) => (
-          <TouchableOpacity
-            key={medicine.id}
-            onPress={() =>
-              router.push({
-                pathname: "/details",
-                params: { id: String(medicine.id) },
-              })
-            }
-            style={styles.box}
-          >
-            <Text>{medicine.name}</Text>
-            <Text>{medicine.category}</Text>
-            <Text numberOfLines={2}>{medicine.purpose}</Text>
-          </TouchableOpacity>
-        ))
+        <View style={styles.list}>
+          {filteredMedicines.map((medicine) => (
+            <TouchableOpacity
+              key={medicine.id}
+              accessibilityRole="button"
+              onPress={() =>
+                router.push({
+                  pathname: "/details",
+                  params: { id: String(medicine.id) },
+                })
+              }
+              style={styles.medicineCard}
+            >
+              <View style={styles.cardTop}>
+                <View style={styles.medicineBadge}>
+                  <Text style={styles.medicineBadgeText}>
+                    {medicine.name.charAt(0)}
+                  </Text>
+                </View>
+                <View style={styles.medicineInfo}>
+                  <Text style={styles.medicineTag}>{medicine.category}</Text>
+                  <Text style={styles.medicineName}>{medicine.name}</Text>
+                  <Text numberOfLines={2} style={styles.subtitle}>
+                    {medicine.purpose}
+                  </Text>
+                </View>
+              </View>
+              <View style={styles.buttonWrap}>
+                <Text style={styles.buttonText}>View details</Text>
+              </View>
+            </TouchableOpacity>
+          ))}
+        </View>
       )}
+
+      <Text style={styles.note}>
+        Medicine information is for general educational purposes and is not a
+        substitute for professional medical advice.
+      </Text>
     </ScrollView>
   );
 }
@@ -254,20 +199,6 @@ const styles = StyleSheet.create({
   header: {
     alignItems: "center",
     marginBottom: 4,
-  },
-  iconWrap: {
-    width: 52,
-    height: 52,
-    borderRadius: 18,
-    backgroundColor: Colors.light.backgroundElement,
-    borderWidth: 1,
-    borderColor: Colors.light.border,
-    alignItems: "center",
-    justifyContent: "center",
-    marginBottom: 8,
-  },
-  icon: {
-    fontSize: 26,
   },
   title: {
     fontSize: 30,

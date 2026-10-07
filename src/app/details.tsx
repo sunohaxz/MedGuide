@@ -1,81 +1,69 @@
-import { Image } from "expo-image";
+import { useLocalSearchParams } from "expo-router";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 
-import { ExternalLink } from "@/components/external-link";
-import { Collapsible } from "@/components/ui/collapsible";
 import { Colors } from "@/constants/theme";
+import { medicineData } from "../data/mock-api";
 
-export default function TabTwoScreen() {
+export default function MedicineDetailsScreen() {
+  const { id } = useLocalSearchParams<{ id?: string }>();
+  const medicineId = Array.isArray(id) ? id[0] : id;
+  const medicine = medicineData.medicines.find(
+    (item) => item.id === medicineId,
+  );
+
+  if (!medicine) {
+    return (
+      <View style={styles.notFoundBox}>
+        <Text style={styles.notFoundText}>Medicine not found.</Text>
+      </View>
+    );
+  }
+
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-      <View>
-        <Text>Explore</Text>
-        <Text>
-          This starter app includes example{"\n"}code to help you get started.
-        </Text>
-
-        <ExternalLink href="https://docs.expo.dev">
-          <Text>Expo documentation</Text>
-        </ExternalLink>
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={styles.content}
+    >
+      <View style={styles.header}>
+        <View style={styles.badge}>
+          <Text style={styles.badgeText}>{medicine.name.charAt(0)}</Text>
+        </View>
+        <Text style={styles.tag}>{medicine.category}</Text>
+        <Text style={styles.name}>{medicine.name}</Text>
+        <Text style={styles.body}>{medicine.purpose}</Text>
       </View>
 
-      <View>
-        <Collapsible title="File-based routing">
-          <Text>
-            This app has two screens: <Text>src/app/index.tsx</Text> and{" "}
-            <Text>src/app/explore.tsx</Text>
-          </Text>
-          <Text>
-            The layout file in <Text>src/app/_layout.tsx</Text> sets up the tab
-            navigator.
-          </Text>
-          <ExternalLink href="https://docs.expo.dev/router/introduction">
-            <Text>Learn more</Text>
-          </ExternalLink>
-        </Collapsible>
-
-        <Collapsible title="Android, iOS, and web support">
-          <Text>
-            You can open this project on Android, iOS, and the web. To open the
-            web version, press <Text>w</Text> in the terminal running this
-            project.
-          </Text>
-          <Image source={require("@/assets/images/tutorial-web.png")} />
-        </Collapsible>
-
-        <Collapsible title="Images">
-          <Text>
-            For static images, you can use the <Text>@2x</Text> and{" "}
-            <Text>@3x</Text> suffixes to provide files for different screen
-            densities.
-          </Text>
-          <Image source={require("@/assets/images/react-logo.png")} />
-          <ExternalLink href="https://reactnative.dev/docs/images">
-            <Text>Learn more</Text>
-          </ExternalLink>
-        </Collapsible>
-
-        <Collapsible title="Light and dark mode components">
-          <Text>
-            This template has light and dark mode support. The{" "}
-            <Text>useColorScheme()</Text> hook lets you inspect what the
-            user&apos;s current color scheme is, and so you can adjust UI colors
-            accordingly.
-          </Text>
-          <ExternalLink href="https://docs.expo.dev/develop/user-interface/color-themes/">
-            <Text>Learn more</Text>
-          </ExternalLink>
-        </Collapsible>
-
-        <Collapsible title="Animations">
-          <Text>
-            This template includes an example of an animated component. The{" "}
-            <Text>src/components/ui/collapsible.tsx</Text> component uses the
-            powerful <Text>react-native-reanimated</Text> library to animate
-            opening this hint.
-          </Text>
-        </Collapsible>
+      <View style={styles.card}>
+        <Text style={styles.sectionTitle}>About this medicine</Text>
+        <Text style={styles.body}>{medicine.description}</Text>
       </View>
+
+      <View style={styles.card}>
+        <Text style={styles.sectionTitle}>Common uses</Text>
+        <View style={styles.commonUsesList}>
+          {medicine.commonUses.map((use) => (
+            <View key={use} style={styles.commonUseRow}>
+              <View style={styles.commonUseBullet} />
+              <Text style={styles.body}>{use}</Text>
+            </View>
+          ))}
+        </View>
+      </View>
+
+      <View style={styles.card}>
+        <Text style={styles.sectionTitle}>Important information</Text>
+        <Text style={styles.body}>{medicine.importantInfo}</Text>
+      </View>
+
+      <View style={styles.warningCard}>
+        <Text style={styles.warningTitle}>Important safety information</Text>
+        <Text style={styles.warningText}>{medicine.warning}</Text>
+      </View>
+
+      <Text style={styles.disclaimer}>
+        This information is for general educational purposes and is not a
+        substitute for professional medical advice.
+      </Text>
     </ScrollView>
   );
 }
@@ -119,6 +107,7 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: "700",
     color: Colors.light.text,
+    textAlign: "center",
   },
   card: {
     backgroundColor: Colors.light.backgroundElement,
@@ -176,10 +165,21 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     padding: 24,
+    backgroundColor: Colors.light.background,
   },
   notFoundText: {
     fontSize: 18,
     color: Colors.light.text,
     fontWeight: "600",
+  },
+  disclaimer: {
+    fontSize: 13,
+    lineHeight: 18,
+    padding: 12,
+    borderLeftWidth: 3,
+    borderLeftColor: Colors.light.accent,
+    color: Colors.light.textSecondary,
+    backgroundColor: Colors.light.backgroundElement,
+    borderRadius: 10,
   },
 });

@@ -1,83 +1,95 @@
 import { Image } from "expo-image";
-import { ScrollView, Text, View } from "react-native";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 
 import { ExternalLink } from "@/components/external-link";
 import { Collapsible } from "@/components/ui/collapsible";
+import { MaxContentWidth, Spacing } from "@/constants/theme";
 
 export default function TabTwoScreen() {
   return (
-    <ScrollView>
-      <View>
-        <Text>Explore</Text>
-        <Text>
-          This starter app includes example{"\n"}code to help you get started.
-        </Text>
-
-        <ExternalLink href="https://docs.expo.dev">
-          <Text>Expo documentation</Text>
-        </ExternalLink>
-      </View>
-
-      <View>
-        <Collapsible title="File-based routing">
-          <Text>
-            This app has two screens: <Text>src/app/index.tsx</Text> and{" "}
-            <Text>src/app/explore.tsx</Text>
+    <ScrollView
+      style={styles.scrollView}
+      contentContainerStyle={styles.contentContainer}
+    >
+      <View style={styles.container}>
+        <View style={styles.titleContainer}>
+          <Text>Explore</Text>
+          <Text style={styles.centerText}>
+            This starter app includes example{"\n"}code to help you get started.
           </Text>
-          <Text>
-            The layout file in <Text>src/app/_layout.tsx</Text> sets up the tab
-            navigator.
-          </Text>
-          <ExternalLink href="https://docs.expo.dev/router/introduction">
-            <Text>Learn more</Text>
+          <ExternalLink href="https://docs.expo.dev">
+            <Text>Expo documentation</Text>
           </ExternalLink>
-        </Collapsible>
+        </View>
 
-        <Collapsible title="Android, iOS, and web support">
-          <Text>
-            You can open this project on Android, iOS, and the web. To open the
-            web version, press <Text>w</Text> in the terminal running this
-            project.
-          </Text>
-          <Image source={require("@/assets/images/tutorial-web.png")} />
-        </Collapsible>
+        <View style={styles.sectionsWrapper}>
+          <Collapsible title="File-based routing">
+            <Text>
+              This app has two screens: <Text>src/app/index.tsx</Text> and{" "}
+              <Text>src/app/explore.tsx</Text>
+            </Text>
+            <Text>
+              The layout file in <Text>src/app/_layout.tsx</Text> sets up the tab
+              navigator.
+            </Text>
+            <ExternalLink href="https://docs.expo.dev/router/introduction">
+              <Text>Learn more</Text>
+            </ExternalLink>
+          </Collapsible>
 
-        <Collapsible title="Images">
-          <Text>
-            For static images, you can use the <Text>@2x</Text> and{" "}
-            <Text>@3x</Text> suffixes to provide files for different screen
-            densities.
-          </Text>
-          <Image source={require("@/assets/images/react-logo.png")} />
-          <ExternalLink href="https://reactnative.dev/docs/images">
-            <Text>Learn more</Text>
-          </ExternalLink>
-        </Collapsible>
+          <Collapsible title="Android, iOS, and web support">
+            <Text>
+              You can open this project on Android, iOS, and the web. To open the
+              web version, press <Text>w</Text> in the terminal running this
+              project.
+            </Text>
+            <Image
+              style={styles.imageTutorial}
+              source={require("@/assets/images/tutorial-web.png")}
+            />
+          </Collapsible>
 
-        <Collapsible title="Light and dark mode components">
-          <Text>
-            This template has light and dark mode support. The{" "}
-            <Text>useColorScheme()</Text> hook lets you inspect what the
-            user&apos;s current color scheme is, and so you can adjust UI colors
-            accordingly.
-          </Text>
-          <ExternalLink href="https://docs.expo.dev/develop/user-interface/color-themes/">
-            <Text>Learn more</Text>
-          </ExternalLink>
-        </Collapsible>
+          <Collapsible title="Images">
+            <Text>
+              For static images, you can use the <Text>@2x</Text> and{" "}
+              <Text>@3x</Text> suffixes to provide files for different screen
+              densities.
+            </Text>
+            <Image
+              style={styles.imageReact}
+              source={require("@/assets/images/react-logo.png")}
+            />
+            <ExternalLink href="https://reactnative.dev/docs/images">
+              <Text>Learn more</Text>
+            </ExternalLink>
+          </Collapsible>
 
-        <Collapsible title="Animations">
-          <Text>
-            This template includes an example of an animated component. The{" "}
-            <Text>src/components/ui/collapsible.tsx</Text> component uses the
-            powerful <Text>react-native-reanimated</Text> library to animate
-            opening this hint.
-          </Text>
-        </Collapsible>
+          <Collapsible title="Light and dark mode components">
+            <Text>
+              This template has light and dark mode support. The{" "}
+              <Text>useColorScheme()</Text> hook lets you inspect what the
+              user&apos;s current color scheme is, and so you can adjust UI colors
+              accordingly.
+            </Text>
+            <ExternalLink href="https://docs.expo.dev/develop/user-interface/color-themes/">
+              <Text>Learn more</Text>
+            </ExternalLink>
+          </Collapsible>
+
+          <Collapsible title="Animations">
+            <Text>
+              This template includes an example of an animated component. The{" "}
+              <Text>src/components/ui/collapsible.tsx</Text> component uses the
+              powerful <Text>react-native-reanimated</Text> library to animate
+              opening this hint.
+            </Text>
+          </Collapsible>
+        </View>
       </View>
     </ScrollView>
   );
 }
+
 const styles = StyleSheet.create({
   scrollView: {
     flex: 1,
@@ -99,25 +111,10 @@ const styles = StyleSheet.create({
   centerText: {
     textAlign: 'center',
   },
-  pressed: {
-    opacity: 0.7,
-  },
-  linkButton: {
-    flexDirection: 'row',
-    paddingHorizontal: Spacing.four,
-    paddingVertical: Spacing.two,
-    borderRadius: Spacing.five,
-    justifyContent: 'center',
-    gap: Spacing.one,
-    alignItems: 'center',
-  },
   sectionsWrapper: {
     gap: Spacing.five,
     paddingHorizontal: Spacing.four,
     paddingTop: Spacing.three,
-  },
-  collapsibleContent: {
-    alignItems: 'center',
   },
   imageTutorial: {
     width: '100%',
@@ -131,5 +128,4 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
 });
-
 

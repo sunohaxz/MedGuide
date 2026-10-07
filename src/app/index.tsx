@@ -1,7 +1,6 @@
-import { router } from "expo-router";
+import { Link } from "expo-router";
 import { useState } from "react";
 import {
-  Button,
   ScrollView,
   StyleSheet,
   Text,
@@ -17,7 +16,16 @@ export default function HomeScreen() {
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
+      <View style={styles.navBar}>
+        <Link href="/about" style={styles.aboutLink}>
+          About
+        </Link>
+      </View>
+
       <View style={styles.header}>
+        <View style={styles.iconWrap}>
+          <Text style={styles.icon}>💊</Text>
+        </View>
         <Text style={styles.title}>MedGuide</Text>
         <Text style={styles.description}>Your simple medicine guide</Text>
       </View>
@@ -34,11 +42,10 @@ export default function HomeScreen() {
         <Text style={styles.welcome}>Hello, {displayName}!</Text>
       </View>
 
-      <View style={styles.buttonWrap}>
-        <Button
-          title="View Medicines"
-          onPress={() => router.push("/medicines")}
-        />
+      <View style={styles.primaryLinkWrap}>
+        <Link href="/medicines" style={styles.primaryLink}>
+          View Medicines
+        </Link>
       </View>
 
       <View style={styles.section}>
@@ -75,18 +82,45 @@ const styles = StyleSheet.create({
   content: {
     flexGrow: 1,
     paddingHorizontal: 24,
-    paddingTop: 24,
+    paddingTop: 12,
     paddingBottom: 32,
     gap: 16,
   },
+  navBar: {
+    minHeight: 48,
+    alignItems: "flex-end",
+    justifyContent: "center",
+  },
+  aboutLink: {
+    color: Colors.light.accent,
+    fontSize: 14,
+    fontWeight: "600",
+    paddingVertical: 10,
+    paddingHorizontal: 4,
+  },
   header: {
     alignItems: "center",
+    gap: 8,
     marginBottom: 8,
+  },
+  iconWrap: {
+    width: 64,
+    height: 64,
+    borderRadius: 20,
+    backgroundColor: Colors.light.backgroundElement,
+    borderWidth: 1,
+    borderColor: Colors.light.border,
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 2,
+  },
+  icon: {
+    fontSize: 30,
   },
   title: {
     fontSize: 32,
     fontWeight: "bold",
-    color: Colors.light.text,
+    color: Colors.light.accent,
   },
   description: {
     fontSize: 16,
@@ -130,9 +164,18 @@ const styles = StyleSheet.create({
     color: Colors.light.text,
     fontWeight: "600",
   },
-  buttonWrap: {
+  primaryLinkWrap: {
+    alignItems: "stretch",
+  },
+  primaryLink: {
+    paddingVertical: 12,
     borderRadius: 14,
     overflow: "hidden",
+    backgroundColor: Colors.light.accent,
+    color: "#FFFFFF",
+    textAlign: "center",
+    fontSize: 16,
+    fontWeight: "600",
   },
   section: {
     padding: 16,
